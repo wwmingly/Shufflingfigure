@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播</title>
+	<style type="text/css">
+		*{padding:0;margin: 0;list-style: none;}
+        .banner{margin: 10px auto;height: 400px;width: 700px;overflow: hidden;position: relative;}
+        .banner .img{width: 50000px;position: absolute;left: 0px;top: 0px;}/*不设置宽度就会继承父级700，所以设置宽度*/
+    .banner .img li{float: left;}
+    .con{margin: 0px auto;width: 580px;}
+    .sm_ban{width: 480px;height: 100px;overflow: hidden;position: relative;float: left;}
+    .sm_ban .sm_img{width: 2000px;position: absolute;left: 0px;top: 0px;}
+    .sm_ban li{float: left;}
+    .sm_ban img{height: 100px;width: 100px;margin: 0 10px;}
+
+     .sm_ban .btn{width: 30px;height: 50px;background: rgba(0,0,0,0.5);position: absolute;top: 50%;margin-top: -25px;cursor: pointer;text-align: center;line-height: 50px;color: #fff;font-size: 40px;font-family: "宋体";display: none;}
+    .sm_ban:hover .btn{display: block;}
+    .sm_ban .btn_l{left: 0px;}
+    .sm_ban .btn_r{right: 0px;}
+    .dongt{display: inline-block;width: 100px;float: right;}
+    .on{-moz-box-shadow:0px -10px 9px #333333; -webkit-box-shadow:0px -10px 9px #333333; box-shadow:0px -10px 9px #333333;}
+	</style>
+	<script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var i=0;
+		var j=0;
+		var length = $(".banner .img li").size();
+		$(".dongt").text("1/"+length);
+		var bclone = $(".banner .img li").first().clone();
+		$(".banner .img").append(bclone);
+
+		var mclone1 = $(".sm_ban .sm_img li").first().clone();
+		var mclone2 = $(".sm_ban .sm_img li").eq(2).clone();
+		var mclone3 = $(".sm_ban .sm_img li").eq(3).clone();
+		$(".sm_ban .sm_img").append(mclone1);
+		$(".sm_ban .sm_img").append(mclone2);
+		$(".sm_ban .sm_img").append(mclone3);
+
+
+
+		var bsize = $(".banner .img li").size();
+		var msize = $(".sm_ban .sm_img li").size();
+
+
+		var t = setInterval(movel,2000);
+        // 对banner定时器的操作
+        $(".banner").hover(function(){
+        	clearInterval(t);
+        },function(){
+            t = setInterval(movel,2000);
+        })
+        $(".sm_ban").hover(function(){
+        	clearInterval(t);
+        },function(){
+            t = setInterval(movel,2000);
+        });
+        $(".sm_ban .btn_l").click(function(){
+		    movel();			
+		})
+		$(".sm_ban .btn_r").click(function(){
+		mover();
+		});
+		$(".sm_ban .sm_img li").hover(function(){
+			var index = $(this).index();
+			if(index==length){
+
+            	index=0;
+            	$(".banner .img").css({left:0});
+		    	$(".sm_ban .sm_img").css({left:0});
+            }
+            if(index==length+1){
+            	index=1;
+            }
+            if(index==length+2){
+            	index=2;
+            }
+        
+        	$(".banner .img").stop().animate({left:-index*700},500);
+        	$(this).addClass("on").siblings().removeClass("on");
+            
+
+        	$(".dongt").text((index+1)+"/"+length);
+        })
+
+		function movel(){
+			
+			i++;
+
+		    if(i==bsize-1){
+
+		    	$(".banner .img").css({left:0});
+		    	$(".sm_ban .sm_img").css({left:0});
+
+		    	
+		    	i=1;
+		    }
+		    // alert(i)
+		    $(".dongt").text((i+0)+"/"+length);
+			$(".banner .img").stop().animate({left:-i*700},500)
+
+            $(".sm_ban .sm_img").stop().animate({left:-i*120},500)
+           
+            if(i==bsize-1){
+            	$(".sm_ban .sm_img li").eq(0).addClass("on").siblings().removeClass("on");
+            }else
+            {
+            	$(".sm_ban .sm_img li").eq(i).addClass("on").siblings().removeClass("on");
+            }
+            
+           
+
+        
+            
+
+
+
+		}
+		function mover(){
+			i--;
+		    if(i==-1){
+		    	$(".banner .img").css({left:-(bsize-1)*700});
+		    	$(".sm_ban .sm_img").css({left:-(bsize-1)*120});
+		    	i=bsize-2;
+		    }
+		    $(".dongt").text((i+1)+"/"+length);
+			$(".banner .img").stop().animate({left:-i*700},500)
+			$(".sm_ban .sm_img").stop().animate({left:-i*120},500)
+			$(".sm_ban .sm_img li").eq(i).addClass("on").siblings().removeClass("on");
+		}
+	})
+	</script>
+</head>
+<body>
+	<div class="posi">
+		<div class="banner">
+			<ul class="img">
+				<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+				<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+			</ul>
+		</div>
+		<div class="con">
+			<div class="sm_ban">
+				<ul class="sm_img">
+					<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/3.png" alt=""></a></li>
+					<li><a href="#"><img src="images/4.png" alt=""></a></li>
+					<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/3.png" alt=""></a></li>
+					<li><a href="#"><img src="images/4.png" alt=""></a></li>
+				</ul>
+				<div class="btn btn_l">&lt</div>
+				<div class="btn btn_r">&gt</div>
+			</div>
+		
+			<span class="dongt"></span>
+		</div>
+	</div>
+</body>
+</html>

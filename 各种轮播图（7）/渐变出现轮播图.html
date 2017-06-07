@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>渐变轮播图</title>
+	<style type="text/css">
+        *{padding: 0;margin: 0;}
+        li{list-style: none;}
+        .out{width: 700px;height: 400px;border: 2px solid #000;margin: 50px auto;position: relative;}
+        .out .img li{position: absolute;left: 0px;top: 0px;display: none;}
+        /*数字*/
+        .out .num{position: absolute;left: 0px;bottom: 20px;font-size: 0px;width: 100%;text-align: center;}
+        .out .num li{height: 20px;width: 20px;background: #333;border-radius: 50%;font-size: 16px;text-align: center;line-height: 20px;margin: 0 3px;color: #fff;display: inline-block;cursor: pointer;}
+        .num li.active{background: #a00;}
+       /*按左右钮*/
+        .out .btn{position: absolute;height: 60px;width: 30px;background: rgba(0,0,0,0.3);top: 50%;margin-top: -30px;color: #fff;font-size: 40px;line-height: 60px;text-align: center;cursor: pointer;display: none;}
+        .out:hover .btn{display: block;}
+        .out .left{left: 0px;}
+        .out .right{right: 0px;}
+	</style>
+	<script type="text/javascript"src="jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		// 默认开始时第一张显示
+		$(".out .img li").first().show();
+		// 当鼠标经过数字的时候，实现对应的轮播
+		$(".out .num li").mouseover(function(){
+			$(this).addClass("active").siblings().removeClass("active");
+			var index= $(this).index();
+			$(".img li").eq(index).fadeIn().siblings().fadeOut()
+		})
+		var i=0;
+        var t = setInterval(move,1500);
+        // 向右核心函数
+        function move(){
+            i++;
+            var l = $(".img li").length
+            if(i==l){
+            	i=0;
+            }
+            $(".num li").eq(i).addClass("active").siblings().removeClass("active");
+            $(".img li").eq(i).fadeIn().siblings().fadeOut();
+        }
+        // 向左核心函数
+        function moveL(){
+            i--;
+            var l = $(".img li").length
+            if(i==-1){
+            	i=l-1;
+            }
+            $(".num li").eq(i).addClass("active").siblings().removeClass("active");
+            $(".img li").eq(i).fadeIn().siblings().fadeOut();
+        }
+        // 当鼠标经过的时候图片停止，离开时候自动轮播
+        $(".out").hover(function(){
+        	clearInterval(t);
+        },function(){
+        	t = setInterval(move,1500);
+        })
+        // 点击左右按钮时，进行轮播
+        $(".out .right").click(function(){
+        	move();
+        })
+        $(".out .left").click(function(){
+        	moveL();
+        })
+	})
+	</script>
+</head>
+<body>
+	<div class="out">
+		<ul class="img">
+			<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/3.png" alt=""></a></li>
+			<li><a href="#"><img src="images/4.png" alt=""></a></li>
+			<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+		</ul>
+		<ul class="num">
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+		</ul>
+		<div class="left btn"><</div>
+		<div class="right btn">></div>
+	</div>
+</body>
+</html>

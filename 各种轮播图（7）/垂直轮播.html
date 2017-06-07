@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>垂直轮播</title>
+	<style type="text/css">
+	*{padding: 0px;margin: 0px;list-style: none;}
+	.content{
+		margin: 10px auto;
+		width: 830px;
+		height: 400px;
+		position: relative;
+	}
+	.content .left{
+		position: relative;
+		float: left;
+		width: 700px;
+		height: 400px;
+		overflow: hidden;
+	}
+	.content .left li{
+		float: left;
+	}
+	.content .left .img{
+		display: inline-block;
+		height: 400px;
+		width: 10000px;
+		float: left;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+	}
+	.right{
+		float: right;
+		height: 340px;
+		width: 120px;
+		overflow: hidden;
+		position: relative;
+		margin-top: 30px;
+		
+	}
+	.right .sm_img{
+		height: 100000px;
+		width: 120px;
+		position: absolute;
+		
+		top: 0px;
+		right: 0px;
+	}
+	.right li{
+		height: 100px;
+		width: 100px;
+		margin: 10px;
+	}
+	.right li img{
+		height: 100px;
+		width: 100px;
+	}
+	.btn{
+		width: 100px;
+		height: 30px;
+		background: rgba(0,0,0,0.5);
+		position: absolute;
+		cursor: pointer;
+		text-align: center;
+		line-height: 30px;
+		color: #fff;
+		font-size: 30px;
+		font-family: "宋体";
+		display: none;
+	}
+    .content:hover .btn{
+    	display: block;
+    }
+    .btn_l{
+    	position: absolute;
+    	right: 10px;
+    	top: 0px;
+    }
+    .btn_r{
+    	position: absolute;
+    	right: 10px;
+    	bottom: 0px;
+    }
+    .on{
+		-moz-box-shadow:0px 0px 8px #333333; 
+		-webkit-box-shadow:0px 0px 8px #333333; 
+		box-shadow:0px 0px 8px #333333;
+    }
+	</style>
+	<script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+</head>
+<body>
+	<div class="content">
+		<div class="left">
+			<ul class="img">
+				<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+				<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+			</ul>
+		</div>
+		<div class="btn btn_l">&lt</div>
+		<div class="right">
+			<ul class="sm_img">
+				<li class="on"><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+				<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="#"><img src="images/3.png" alt=""></a></li>
+				<li><a href="#"><img src="images/4.png" alt=""></a></li>
+			</ul> 
+		</div>
+		<div class="btn btn_r">&gt</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var i = 0;
+		/* clone（）是复制的意思，原理最好在纸上画一下;
+			实现这个的原理是：
+			1、利用css()的瞬间移动实现无缝轮播，与animate（）结合；
+			2、在left大的图片中，复制第一张放到最后，说明第一张图和第9张图是同一张
+			   所以判断，如果轮播到第9张的时候，利用css()瞬间调到第一张同时，
+			   i强制赋值成2，让animate（）跳转到第二张图。
+		*/
+		var clone = $(".left .img li").first().clone();
+		var mclone1 = $(".right .sm_img li").first().clone();
+		var mclone2 = $(".right .sm_img li").eq(2).clone();
+		var mclone3 = $(".right .sm_img li").eq(3).clone();
+		$(".left .img").append(clone);
+		$(".right .sm_img").append(mclone1);
+		$(".right .sm_img").append(mclone2);
+		$(".right .sm_img").append(mclone3);
+		var bsize = $(".left .img li").size();
+		var msize = $(".right .sm_img li").size();
+		/*这里可以测试一下这两个长度*/
+		// alert(bsize+":"+msize);
+		var t = setInterval(movel,2000);//设置定时器，movel是一个函数
+		$(".content").hover(function(){
+			clearInterval(t);//清除定时器
+		},function(){
+            t = setInterval(movel,2000);
+		});
+		/*鼠标经过小的图片时对应轮播到大的图片*/
+		$(".right .sm_img li").hover(function(){
+			var index = $(this).index();//获取下标，这里的下标是从0开始的哦，注意
+			if(index==msize-2){//当index=9时，就是复制的第2张时，那么index=2.就是准备跳转到第三张
+            	index=2;
+            	$(".banner .img").css({left:0});
+		    	$(".sm_ban .sm_img").css({top:-110*index});
+            }
+            if(index==msize-1){
+            	index = 3;
+            	$(".banner .img").css({left:-770});
+		    	$(".sm_ban .sm_img").css({top:-110});
+            }  
+            $(".left .img").stop().animate({left:-index*700},500);
+            $(this).addClass("on").siblings().removeClass("on");
+            
+		})
+		$(".btn_l").click(function(){
+			movel();
+		});
+		$(".btn_r").click(function(){
+			mover();
+		})
+		function mover(){
+			/*最好去浏览器看着.img的left值变化*/
+			i--;
+			if(i==-1){
+				$(".left .img").css({left:bsize*700});
+				$(".right .sm_img").css({top:-bsize*110});
+		    	i=bsize-2;
+			}
+			$(".left .img").stop().animate({left:-i*700},500)
+			$(".right .sm_img").stop().animate({top:-i*110},500);
+			$(".right .sm_img li").eq(i).addClass("on").siblings().removeClass("on");
+		}
+		function movel(){
+			i++;
+			if(i==bsize){
+				$(".left .img").css({left:0});
+				$(".right .sm_img").css({top:0});
+				i=1;
+			}
+			$(".left .img").animate({left:-i*700},500);
+			$(".right .sm_img").animate({top:-i*110},500);
+			if(i==bsize-1){
+            	$(".right .sm_img li").eq(0).addClass("on").siblings().removeClass("on");
+            }else
+            {
+            	$(".right .sm_img li").eq(i).addClass("on").siblings().removeClass("on");
+            }
+		}
+	})
+</script>
+</html>
